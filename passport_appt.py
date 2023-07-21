@@ -29,9 +29,6 @@ def parse_args():
         action="store",
         help="maximum date to search for appointments",
     )
-    parser.add_argument("--monitor", dest="monitor", action="store_true")
-    parser.add_argument("--edit", dest="edit", action="store_true")
-    parser.add_argument("--ws_id", dest="ws_id", action="store")
 
     return parser.parse_args()
 
@@ -57,11 +54,6 @@ def get_location_ids(zip_code:str)->tuple[list, list]:
         "state": ""
     })
 
-    # headers = {
-    # 'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
-    #   'Content-Type': 'application/json',
-    # }
-    # response = requests.request("POST", url, headers=headers, data=payload)
     response = get_post_response(url, payload)
     ids = []
     address = []
