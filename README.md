@@ -1,4 +1,4 @@
-# passport-appointment-locator
+# usps-passport-appointment-locator
 
 quick start: 
 - get the poetry environment going, using `poetry install` and `poetry shell`
