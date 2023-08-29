@@ -85,7 +85,7 @@ def get_zip_codes_within_radius(zip_code, distance, units='miles'):
     """
 
     API_ENDPOINT = "https://www.zipcodeapi.com/rest/{api_key}/radius.csv/{zip_code}/{distance}/{units}"
-    API_KEY = os.environ.get("ZIP_RADIUS_API_KEY")
+    API_KEY = os.environ.get("ZIP_RADIUS_API_KEY") # get key from https://www.zipcodeapi.com/Register and set as ZIP_RADIUS_API_KEY environment var
 
     if not API_KEY:
         raise ValueError("ZIP_RADIUS_API_KEY environment variable not set.")
