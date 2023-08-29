@@ -130,8 +130,8 @@ def main():
             if locid not in uniq_locations:
                 uniq_locations[locid] = address
                 print(f"will consider location{locid} at address {address['addressLineOne']}, {address['city']}")
-        with open('.usps_passport_locator_locations_dskkaj903890jlkjafljlkdjslkafjkjc', 'w') as f:
-            json.dump(uniq_locations,f) # on future runs, we can skip the above # TODO: unindent this and prev line one tab. this just for a test
+    with open('.usps_passport_locator_locations_dskkaj903890jlkjafljlkdjslkafjkjc', 'w') as f:
+        json.dump(uniq_locations,f) # on future runs, we can skip the above and just load this file
 
     url = "https://tools.usps.com/UspsToolsRestServices/rest/v2/appointmentDateSearch"
 
