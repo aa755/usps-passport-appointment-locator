@@ -40,6 +40,10 @@ def parse_args():
         action="store",
         help="maximum date to search for appointments",
     )
+    parser.add_argument(
+        "--use-stored-locs",
+        action='store_true',
+        default=False)
 
     return parser.parse_args()
 
@@ -101,18 +105,7 @@ def get_zip_codes_within_radius(zip_code, distance, units='miles'):
 
     return [row for row in reader]
 
-def main():
-    args = parse_args()
-    polling_interval = int(args.polling_interval)
-    zip_code = args.zip_code
-    radius = args.radius
-    # id search
-    maximum_date = args.max_date
-    if not maximum_date:
-        maximum_date = datetime.datetime.today() + datetime.timedelta(days=30)
-        maximum_date = maximum_date.strftime('%Y%m%d')
-
-
+def get_usps_locs(zip_code, radius):
     result = get_zip_codes_within_radius(zip_code, radius)
     for zip in result:
         print(zip)
@@ -132,6 +125,24 @@ def main():
                 print(f"will consider location{locid} at address {address['addressLineOne']}, {address['city']}")
     with open('.usps_passport_locator_locations_dskkaj903890jlkjafljlkdjslkafjkjc', 'w') as f:
         json.dump(uniq_locations,f) # on future runs, we can skip the above and just load this file
+    return uniq_locations
+
+def main():
+    args = parse_args()
+    polling_interval = int(args.polling_interval)
+    zip_code = args.zip_code
+    radius = args.radius
+    # id search
+    maximum_date = args.max_date
+    if not maximum_date:
+        maximum_date = datetime.datetime.today() + datetime.timedelta(days=30)
+        maximum_date = maximum_date.strftime('%Y%m%d')
+
+    if args.use_stored_locs:
+        with open('.usps_passport_locator_locations_dskkaj903890jlkjafljlkdjslkafjkjc', 'r') as f:
+            uniq_locations=json.load(f)
+    else:
+        uniq_locations=get_usps_locs(zip_code, radius)
 
     url = "https://tools.usps.com/UspsToolsRestServices/rest/v2/appointmentDateSearch"
 
@@ -151,7 +162,7 @@ def main():
             if dates:=response.json().get("dates"):
                 for date in dates:
                     if int(date) < int(maximum_date):
-                        print(f"found date {date} at {address['addressLineOne'], address['city']}")
+                        print(f"found date {date} at {address['addressLineOne'], address['city'], address['postalCode']}")
 
         print(f"will check again in {polling_interval}s")
         time.sleep(polling_interval)
